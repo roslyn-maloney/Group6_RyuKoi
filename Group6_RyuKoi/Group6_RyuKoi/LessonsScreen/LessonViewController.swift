@@ -41,10 +41,19 @@ struct Lesson {
     let martialArt: MartialArt
 }
 
-class LessonViewController: TopNavigationViewController {  // ← Change this line
+class LessonViewController: TopNavigationViewController {
     
     // MARK: - Properties
     private let lessonView = LessonView()
+    
+    // Add favorites button with star icon
+    private let favoritesButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "star.fill"), for: .normal)
+        button.tintColor = .systemYellow
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
     
     private var lessons: [Lesson] = [
         Lesson(title: "Basic Kicks", progressState: .notStarted, martialArt: .taekwondo),
@@ -57,15 +66,17 @@ class LessonViewController: TopNavigationViewController {  // ← Change this li
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
-        super.viewDidLoad()  // ← This calls TopNavigationViewController's viewDidLoad
+        super.viewDidLoad()
         
         view.addSubview(lessonView.backButton)
         view.addSubview(lessonView.titleLabel)
+        view.addSubview(favoritesButton)  // Add favorites button
         view.addSubview(lessonView.collectionView)
         
         setupConstraints()
         setupCollectionView()
         setupBackButton()
+        setupFavoritesButton()  // Setup favorites button
     }
     
     // MARK: - Setup
@@ -83,6 +94,12 @@ class LessonViewController: TopNavigationViewController {  // ← Change this li
             lessonView.titleLabel.centerYAnchor.constraint(equalTo: lessonView.backButton.centerYAnchor),
             lessonView.titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
+            // Favorites button on the right side with star icon
+            favoritesButton.centerYAnchor.constraint(equalTo: lessonView.backButton.centerYAnchor),
+            favoritesButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            favoritesButton.widthAnchor.constraint(equalToConstant: 30),
+            favoritesButton.heightAnchor.constraint(equalToConstant: 30),
+            
             lessonView.collectionView.topAnchor.constraint(equalTo: lessonView.titleLabel.bottomAnchor, constant: 20),
             lessonView.collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             lessonView.collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
@@ -99,8 +116,24 @@ class LessonViewController: TopNavigationViewController {  // ← Change this li
         lessonView.backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
     }
     
+    private func setupFavoritesButton() {
+        favoritesButton.addTarget(self, action: #selector(favoritesButtonTapped), for: .touchUpInside)
+    }
+    
     @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
+    }
+    
+    @objc private func favoritesButtonTapped() {
+        let favoritesVC = FavoritesViewController()
+        navigationController?.pushViewController(favoritesVC, animated: true)
+    }
+    
+    // MARK: - Navigation
+    private func navigateToPractices(with lesson: Lesson) {
+        let practicesVC = PracticeViewController()
+        practicesVC.selectedLesson = lesson
+        navigationController?.pushViewController(practicesVC, animated: true)
     }
 }
 
@@ -128,7 +161,8 @@ extension LessonViewController: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegate
 extension LessonViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("Selected lesson at index: \(indexPath.item)")
+        let selectedLesson = lessons[indexPath.item]
+        navigateToPractices(with: selectedLesson)
     }
 }
 

@@ -7,6 +7,7 @@
 //ADD- imagery for each martial art and ig for the levels as well. expand the container size and make it more boxy than pill
 // MARK: - PreferenceViewController.swift
 import UIKit
+
 class PreferenceViewController: UIViewController {
     
     // MARK: - Properties
@@ -90,10 +91,17 @@ class PreferenceViewController: UIViewController {
     }
     
     @objc private func submitTapped() {
-        print("Selected Level: \(selectedLevel ?? "None")")
-        print("Selected Categories: \(selectedCategories)")
+        // Validate that user has made selections
+        guard let level = selectedLevel, !selectedCategories.isEmpty else {
+            showValidationError()
+            return
+        }
         
-        showSubmitConfirmation()
+        // Save preferences
+        savePreferences(level: level, categories: Array(selectedCategories))
+        
+        // Navigate to Lesson Library
+        navigateToLessonLibrary()
     }
     
     // MARK: - Helper Methods
@@ -117,6 +125,7 @@ class PreferenceViewController: UIViewController {
         selectedCategories.insert(category)
         selectButton(button)
     }
+    
     private func deselectCategory(_ category: String, button: UIButton) {
         selectedCategories.remove(category)
         deselectButton(button)
@@ -132,13 +141,26 @@ class PreferenceViewController: UIViewController {
         present(alert, animated: true)
     }
     
-    private func showSubmitConfirmation() {
+    private func showValidationError() {
         let alert = UIAlertController(
-            title: "Preferences Saved",
-            message: "Level: \(selectedLevel ?? "None")\nCategories: \(selectedCategories.joined(separator: ", "))",
+            title: "Incomplete Selection",
+            message: "Please select a skill level and at least one category",
             preferredStyle: .alert
         )
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
+    }
+    
+    private func savePreferences(level: String, categories: [String]) {
+        // Save to UserDefaults
+        UserDefaults.standard.set(level, forKey: "skillLevel")
+        UserDefaults.standard.set(categories, forKey: "selectedMartialArts")
+        
+        print("Preferences Saved - Level: \(level), Categories: \(categories)")
+    }
+    
+    private func navigateToLessonLibrary() {
+        let lessonLibraryVC = LessonViewController()
+        navigationController?.pushViewController(lessonLibraryVC, animated: true)
     }
 }

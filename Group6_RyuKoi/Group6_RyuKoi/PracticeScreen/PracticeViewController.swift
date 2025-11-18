@@ -11,6 +11,8 @@ class PracticeViewController: UIViewController {
     
     // MARK: - Properties
     
+    var selectedLesson: Lesson?
+    
     private let practiceView = PracticeView()
     private var lessons: [PracticeLesson] = []
     private var currentIndex: Int = 0
@@ -23,6 +25,9 @@ class PracticeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let lesson = selectedLesson {
+            print("Showing practices for: \(lesson.title)")
+        }
         setupData()
         setupActions()
         updateLesson()

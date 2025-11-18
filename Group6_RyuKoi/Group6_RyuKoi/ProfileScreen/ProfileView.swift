@@ -8,6 +8,7 @@
 import UIKit
 
 class ProfileView: UIView {
+    var backBtn: UIButton!
     var image: UIImageView!
     var name: UILabel!
     var email: UILabel!
@@ -19,6 +20,7 @@ class ProfileView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = UIColor(red: 1.0, green: 0.953, blue: 0.851, alpha: 1.0)
+        setupBackBtn()
         setupImage()
         setupName()
         setupEmail()
@@ -27,6 +29,14 @@ class ProfileView: UIView {
         setupsetupNotificationLabel()
         setupNotificationTableView()
         initConstraints()
+    }
+    
+    func setupBackBtn() {
+        backBtn = UIButton()
+        backBtn.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        backBtn.tintColor = .label
+        backBtn.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(backBtn)
     }
     
     func setupImage(){
@@ -99,6 +109,9 @@ class ProfileView: UIView {
     
     func initConstraints() {
         NSLayoutConstraint.activate([
+            backBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 3),
+            backBtn.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 3),
+            
             image.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 5),
             image.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             image.widthAnchor.constraint(equalToConstant: 150),

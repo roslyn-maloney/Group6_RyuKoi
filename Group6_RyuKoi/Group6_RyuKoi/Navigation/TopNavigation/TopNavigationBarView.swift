@@ -32,8 +32,9 @@ class TopNavigationBarView: UIView {
     func setupSearchBar() {
         searchBar = UISearchBar()
         searchBar.placeholder = "Search lessons..."
-        searchBar.layer.cornerRadius = 8
-        searchBar.backgroundColor = .clear
+        //searchBar.isUserInteractionEnabled = false
+        searchBar.layer.cornerRadius = 10
+        searchBar.backgroundColor = UIColor(red: 1.0, green: 248/255, blue: 232/255, alpha: 1.0)
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         addSubview(searchBar)
     }
@@ -41,6 +42,7 @@ class TopNavigationBarView: UIView {
     func setupAccount() {
         account = UIButton(type: .system)
         account.setImage(UIImage(systemName: "person.crop.circle"), for: .normal)
+        account.tintColor = .black
         //account.imageView?.contentMode = .scaleAspectFit
         account.translatesAutoresizingMaskIntoConstraints = false
         addSubview(account)
@@ -61,7 +63,8 @@ class TopNavigationBarView: UIView {
             searchBar.leadingAnchor.constraint(equalTo: logo.trailingAnchor, constant: 12),
             searchBar.trailingAnchor.constraint(equalTo: account.leadingAnchor, constant: -12),
             searchBar.centerYAnchor.constraint(equalTo: centerYAnchor),
-            searchBar.heightAnchor.constraint(equalToConstant: 36)
+            searchBar.heightAnchor.constraint(equalToConstant: 36),
+
         ])
     }
     

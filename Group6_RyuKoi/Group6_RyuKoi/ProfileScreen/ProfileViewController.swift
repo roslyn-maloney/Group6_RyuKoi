@@ -15,6 +15,7 @@ class ProfileViewController: UIViewController {
         view = profileScreen
     }
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -23,6 +24,12 @@ class ProfileViewController: UIViewController {
         
         profileScreen.notificationTableView.dataSource = self
         profileScreen.notificationTableView.delegate = self
+        
+        profileScreen.backBtn.addTarget(self, action: #selector(backBtnTapped), for: .touchUpInside)
+    }
+    
+    @objc func backBtnTapped(){
+        navigationController?.popViewController(animated: true)
     }
 }
 

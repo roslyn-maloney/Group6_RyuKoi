@@ -26,8 +26,9 @@ class LoginViewController: UIViewController {
     }
     
     @objc func handleSignIn() {
-        let signinScreen = SignInViewController()
-        navigationController?.pushViewController(signinScreen, animated: true)
+        //let signinScreen = SignInViewController()
+        let communityScreen = CommunityViewController()
+        navigationController?.pushViewController(communityScreen, animated: true)
     }
     
     @objc func handleLogin() {

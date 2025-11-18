@@ -22,7 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         //window?.rootViewController = nav
         //window?.makeKeyAndVisible()
         //Bypass login to test LessonView
-        window?.rootViewController = LessonViewController()
+        window?.rootViewController = FavoritesViewController()
             
             window?.makeKeyAndVisible()
     }

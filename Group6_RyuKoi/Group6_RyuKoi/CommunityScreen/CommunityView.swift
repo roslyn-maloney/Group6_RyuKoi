@@ -182,7 +182,6 @@ class CommunityView: UIView {
         navBar.account.addTarget(target, action: action, for: .touchUpInside)
     }
 
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

@@ -11,8 +11,6 @@ import UIKit
 
 class HomeViewController: UIViewController {
     let homeScreen = HomeView()
-    let navBar = TopNavigationBarView()
-    let bottomNavBar = BottomNavigationBarView()
     var receivedCategory = "" // To be changed with the category...
     let lessons = ["Lesson 1", "Lesson 2", "Lesson 3", "Lesson 4", "Lesson 5", "Lesson 6"]
     
@@ -22,57 +20,59 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(navBar)
-        view.addSubview(bottomNavBar)
-        navBar.translatesAutoresizingMaskIntoConstraints = false
-        bottomNavBar.translatesAutoresizingMaskIntoConstraints = false
         navigationItem.hidesBackButton = true
         // remove separator line between cells
         homeScreen.tableViewLessons.separatorStyle = .none
         
-        NSLayoutConstraint.activate([
-            navBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 35),
-            navBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            navBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            navBar.heightAnchor.constraint(equalToConstant: 60),
-            
-            bottomNavBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
-            bottomNavBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            bottomNavBar.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
-        
-        navBar.account.addTarget(self, action: #selector(openProfile), for: .touchUpInside)
         
         //MARK: patching the table view delegate and datasource to controller...
         homeScreen.tableViewLessons.delegate = self
         homeScreen.tableViewLessons.dataSource = self
+        
+        homeScreen.setAccountTarget(self, action: #selector(openProfile))
+        homeScreen.setLogoTarget(self, action: #selector(openHome))
+        homeScreen.backBtn.addTarget(self, action: #selector(backBtnTapped), for: .touchUpInside)
     }
     
     @objc func openProfile() {
-        let profileVC = ProfileViewController()
-        navigationController?.pushViewController(profileVC, animated: true)
+        let profileScreen = ProfileViewController()
+        navigationController?.pushViewController(profileScreen, animated: true)
+    }
+    
+    @objc func openHome() {
+        let homeController = HomeViewController()
+        navigationController?.pushViewController(homeController, animated: true)
+    }
+    
+    @objc func backBtnTapped(){
+        navigationController?.popViewController(animated: true)
     }
 }
 
-extension HomeViewController: UITableViewDelegate, UITableViewDataSource{
+extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return lessons.count
+        // Two lessons per cell
+        return Int(ceil(Double(lessons.count) / 2.0))
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "lessons", for: indexPath) as! HomeTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "lessons",
+                                                 for: indexPath) as! HomeTableViewCell
         
         let leftIndex = indexPath.row * 2
         let rightIndex = leftIndex + 1
         
-        cell.leftLabel.text = lessons[leftIndex] // fix this somehow....
+        // Left lesson
+        cell.leftLabel.text = lessons[leftIndex]
         
+        // Right lesson (optional)
         if rightIndex < lessons.count {
             cell.rightLessonView.isHidden = false
             cell.rightLabel.text = lessons[rightIndex]
         } else {
-            // Hide right box if odd number of lessons
             cell.rightLessonView.isHidden = true
         }
         

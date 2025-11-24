@@ -18,6 +18,7 @@ class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.hidesBackButton = true
         
         profileScreen.preferencesCollectionView.dataSource = self
         profileScreen.preferencesCollectionView.delegate = self

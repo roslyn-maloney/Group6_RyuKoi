@@ -8,6 +8,8 @@
 import UIKit
 
 class HomeView: UIView {
+    var backBtn: UIButton!
+    var navBar: TopNavigationBarView!
     //MARK: scrollview for scrolling???
     var contentWrapper:UIScrollView!
     
@@ -21,7 +23,8 @@ class HomeView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = UIColor(red: 1.0, green: 0.953, blue: 0.851, alpha: 1.0)
-
+        setupBackBtn()
+        setupNavBar()
         setupContentWrapper()
         setupTableViewCategories()
         setupRect()
@@ -29,6 +32,21 @@ class HomeView: UIView {
         subLabel = setupLabel("Lesson journey", 16)
         
         initConstraints()
+    }
+    
+    func setupBackBtn() {
+        backBtn = UIButton()
+        backBtn.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        backBtn.tintColor = .label
+        backBtn.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(backBtn)
+    }
+    
+    func setupNavBar() {
+        navBar = TopNavigationBarView()
+        //navBar.backgroundColor = .red.withAlphaComponent(0.3)
+        navBar.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(navBar)
     }
     
     func setupContentWrapper(){
@@ -42,7 +60,7 @@ class HomeView: UIView {
         tableViewLessons.register(HomeTableViewCell.self, forCellReuseIdentifier: "lessons")
         tableViewLessons.translatesAutoresizingMaskIntoConstraints = false
         tableViewLessons.backgroundColor = .clear
-
+        
         self.addSubview(tableViewLessons)
     }
     
@@ -68,22 +86,31 @@ class HomeView: UIView {
     func initConstraints(){
         NSLayoutConstraint.activate([
             /*
-            //MARK: contentWrapper constraints...
-            contentWrapper.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor),
-            contentWrapper.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor),
-            contentWrapper.widthAnchor.constraint(equalTo:self.safeAreaLayoutGuide.widthAnchor),
-            contentWrapper.heightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.heightAnchor),*/
+             //MARK: contentWrapper constraints...
+             contentWrapper.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor),
+             contentWrapper.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor),
+             contentWrapper.widthAnchor.constraint(equalTo:self.safeAreaLayoutGuide.widthAnchor),
+             contentWrapper.heightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.heightAnchor),*/
+            
+            backBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 20),
+            backBtn.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 10),
+            
+            //navBar.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor ,constant: 20),
+            navBar.leadingAnchor.constraint(equalTo: backBtn.trailingAnchor),
+            navBar.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            navBar.centerYAnchor.constraint(equalTo: backBtn.centerYAnchor),
+            navBar.heightAnchor.constraint(equalToConstant: 60),
             
             // MARK: category background ...
-            categoryBackground.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor),
+            categoryBackground.topAnchor.constraint(equalTo: navBar.bottomAnchor),
             categoryBackground.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             categoryBackground.heightAnchor.constraint(equalToConstant: 60),
             categoryBackground.widthAnchor.constraint(equalToConstant: 220),
-
+            
             // MARK: category label ...
             categoryLabel.centerXAnchor.constraint(equalTo: categoryBackground.centerXAnchor),
             categoryLabel.centerYAnchor.constraint(equalTo: categoryBackground.centerYAnchor),
-
+            
             // MARK: sublabel under background ...
             subLabel.topAnchor.constraint(equalTo: categoryBackground.bottomAnchor, constant: 8),
             subLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
@@ -93,6 +120,14 @@ class HomeView: UIView {
             tableViewLessons.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -8),
             tableViewLessons.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -8) // maybe!
         ])
+    }
+    
+    func setAccountTarget(_ target: Any?, action: Selector) {
+        navBar.account.addTarget(target, action: action, for: .touchUpInside)
+    }
+    
+    func setLogoTarget(_ target: Any?, action: Selector) {
+        navBar.logo.addTarget(target, action: action, for: .touchUpInside)
     }
     
     //MARK: initializing constraints...

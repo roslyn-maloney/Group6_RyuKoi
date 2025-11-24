@@ -45,6 +45,7 @@ class ProfileView: UIView {
         image.contentMode = .scaleToFill
         image.clipsToBounds = true
         image.layer.cornerRadius = 10
+        image.tintColor = UIColor(red: 59/255, green: 9/255, blue: 24/255, alpha: 1.0)
         image.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(image)
     }
@@ -109,13 +110,13 @@ class ProfileView: UIView {
     
     func initConstraints() {
         NSLayoutConstraint.activate([
-            backBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 3),
-            backBtn.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 3),
+            backBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 10),
+            backBtn.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 10),
             
-            image.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 5),
+            image.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 20),
             image.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            image.widthAnchor.constraint(equalToConstant: 150),
-            image.heightAnchor.constraint(equalToConstant: 150),
+            image.widthAnchor.constraint(equalToConstant: 200),
+            image.heightAnchor.constraint(equalToConstant: 200),
             
             name.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 16),
             name.centerXAnchor.constraint(equalTo: self.centerXAnchor),

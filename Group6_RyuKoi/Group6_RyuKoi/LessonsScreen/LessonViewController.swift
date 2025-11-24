@@ -33,6 +33,20 @@ enum MartialArt {
             return UIColor(red: 0.8, green: 0.2, blue: 0.4, alpha: 1.0) // Pink/Red
         }
     }
+    
+    var description: String {
+        switch self {
+        case .taekwondo: return "Taekwondo"
+        case .karate: return "Karate"
+        case .boxing: return "Boxing"
+        case .mma: return "MMA"
+        case .wrestling: return "Wrestling"
+        case .judo: return "Judo"
+        case .bjj: return "Brazilian Jiu-Jitsu"
+        case .kickboxing: return "Kickboxing"
+        case .muayThai: return "Muay Thai"
+        }
+    }
 }
 
 struct Lesson {
@@ -130,10 +144,11 @@ class LessonViewController: TopNavigationViewController {
     }
     
     // MARK: - Navigation
-    private func navigateToPractices(with lesson: Lesson) {
-        let practicesVC = PracticeViewController()
-        practicesVC.selectedLesson = lesson
-        navigationController?.pushViewController(practicesVC, animated: true)
+    private func navigateToLessonDetail(with lesson: Lesson, lessonNumber: Int) {
+        let lessonDetailVC = LessonDetailViewController()
+        lessonDetailVC.lesson = lesson
+        lessonDetailVC.lessonNumber = lessonNumber
+        navigationController?.pushViewController(lessonDetailVC, animated: true)
     }
 }
 
@@ -162,7 +177,8 @@ extension LessonViewController: UICollectionViewDataSource {
 extension LessonViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedLesson = lessons[indexPath.item]
-        navigateToPractices(with: selectedLesson)
+        // Navigate to lesson detail screen instead of directly to practice
+        navigateToLessonDetail(with: selectedLesson, lessonNumber: indexPath.item + 1)
     }
 }
 

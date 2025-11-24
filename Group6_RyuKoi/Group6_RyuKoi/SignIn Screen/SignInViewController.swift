@@ -1,6 +1,6 @@
 //
 //  SignInViewController.swift
-//  RyūKoi
+//  RyūKoi
 //
 //  Created by R M on 11/13/25.
 //
@@ -16,10 +16,10 @@ class SignInViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Sign In"
-        navigationController?.navigationBar.prefersLargeTitles = true
+        
+        // Hide default Swift navigation bar
+        navigationController?.setNavigationBarHidden(true, animated: false)
         navigationItem.hidesBackButton = true
-
         
         signinScreen.signInBtn.addTarget(self, action: #selector(handleSignIn), for: .touchUpInside)
         signinScreen.loginBtn.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
@@ -34,6 +34,4 @@ class SignInViewController: UIViewController {
         let loginScreen = LoginViewController()
         navigationController?.pushViewController(loginScreen, animated: true)
     }
-    
-    
 }

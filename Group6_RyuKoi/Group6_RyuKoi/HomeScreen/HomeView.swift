@@ -28,7 +28,7 @@ class HomeView: UIView {
         setupContentWrapper()
         setupTableViewCategories()
         setupRect()
-        categoryLabel = setupLabel("Taekwondo", 30) // due to change...temporary
+        categoryLabel = setupLabel("", 30) 
         subLabel = setupLabel("Lesson journey", 16)
         
         initConstraints()
@@ -129,6 +129,10 @@ class HomeView: UIView {
     func setLogoTarget(_ target: Any?, action: Selector) {
         navBar.logo.addTarget(target, action: action, for: .touchUpInside)
     }
+    
+    func updateCategory(_ categoryName: String) {
+            categoryLabel.text = categoryName
+        }
     
     //MARK: initializing constraints...
     required init?(coder: NSCoder) {

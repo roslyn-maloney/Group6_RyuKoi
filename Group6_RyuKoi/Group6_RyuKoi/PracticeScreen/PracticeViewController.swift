@@ -9,91 +9,98 @@ import UIKit
 
 class PracticeViewController: UIViewController {
     
-    // MARK: - Properties
+    private let practiceView = PracticeView()
     
+    // Lesson data passed from previous screen
     var selectedLesson: Lesson?
     
-    private let practiceView = PracticeView()
-    private var lessons: [PracticeLesson] = []
-    private var currentIndex: Int = 0
+    // Practice session data
+    private var currentStepIndex = 0
+    private var totalSteps = 5 // This should come from your lesson data
+    private var isTipsExpanded = true
     
     // MARK: - Lifecycle
-    
     override func loadView() {
         view = practiceView
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let lesson = selectedLesson {
-            print("Showing practices for: \(lesson.title)")
-        }
-        setupData()
         setupActions()
-        updateLesson()
+        updateContent()
+        updateProgress()
     }
     
     // MARK: - Setup
-    
-    private func setupData() {
-        // Sample data - replace with actual lesson data
-        lessons = [
-            PracticeLesson(
-                imageName: "martial_arts_pose_1",
-                tips: "Keep your stance wide and balanced. Distribute weight evenly on both feet. Keep your hands up to protect your face.",
-                currentStep: 1,
-                totalSteps: 5
-            ),
-            PracticeLesson(
-                imageName: "martial_arts_pose_2",
-                tips: "Rotate your hips for maximum power. Keep your core engaged and maintain good posture throughout the movement.",
-                currentStep: 2,
-                totalSteps: 5
-            ),
-            PracticeLesson(
-                imageName: "martial_arts_pose_3",
-                tips: "Return to your starting position smoothly. Always maintain your guard and stay alert.",
-                currentStep: 3,
-                totalSteps: 5
-            )
-        ]
-    }
-    
     private func setupActions() {
-        practiceView.backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        practiceView.previousButton.addTarget(self, action: #selector(previousButtonTapped), for: .touchUpInside)
-        practiceView.nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+        practiceView.backButton.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
+        practiceView.previousButton.addTarget(self, action: #selector(previousTapped), for: .touchUpInside)
+        practiceView.nextButton.addTarget(self, action: #selector(nextTapped), for: .touchUpInside)
+        practiceView.tipsHeaderButton.addTarget(self, action: #selector(toggleTips), for: .touchUpInside)
     }
     
     // MARK: - Actions
-    
-    @objc private func backButtonTapped() {
+    @objc private func backTapped() {
         navigationController?.popViewController(animated: true)
     }
     
-    @objc private func previousButtonTapped() {
-        guard currentIndex > 0 else { return }
-        currentIndex -= 1
-        updateLesson()
+    @objc private func previousTapped() {
+        guard currentStepIndex > 0 else { return }
+        currentStepIndex -= 1
+        updateContent()
+        updateProgress()
     }
     
-    @objc private func nextButtonTapped() {
-        guard currentIndex < lessons.count - 1 else { return }
-        currentIndex += 1
-        updateLesson()
+    @objc private func nextTapped() {
+        guard currentStepIndex < totalSteps - 1 else {
+            // Reached the end - could show completion screen or return to library
+            showCompletionAlert()
+            return
+        }
+        currentStepIndex += 1
+        updateContent()
+        updateProgress()
     }
     
-    // MARK: - Helper Methods
+    @objc private func toggleTips() {
+        isTipsExpanded.toggle()
+        practiceView.toggleTips(isExpanded: isTipsExpanded)
+    }
     
-    private func updateLesson() {
-        guard !lessons.isEmpty else { return }
-        practiceView.configure(with: lessons[currentIndex])
+    // MARK: - Update Methods
+    private func updateContent() {
+        // TODO: Update image and tips from actual lesson data
         
-        // Enable/disable navigation buttons based on position
-        practiceView.previousButton.isEnabled = currentIndex > 0
-        practiceView.nextButton.isEnabled = currentIndex < lessons.count - 1
+        // Update button states
+        practiceView.previousButton.isEnabled = currentStepIndex > 0
+        practiceView.previousButton.alpha = currentStepIndex > 0 ? 1.0 : 0.5
         
-        practiceView.previousButton.alpha = currentIndex > 0 ? 1.0 : 0.3
-        practiceView.nextButton.alpha = currentIndex < lessons.count - 1 ? 1.0 : 0.3
+        practiceView.nextButton.isEnabled = currentStepIndex < totalSteps - 1
+        practiceView.nextButton.alpha = currentStepIndex < totalSteps - 1 ? 1.0 : 0.5
+    }
+    
+    private func updateProgress() {
+        let progress = Float(currentStepIndex + 1) / Float(totalSteps)
+        practiceView.updateProgress(progress)
+    }
+    
+    private func showCompletionAlert() {
+        let alert = UIAlertController(
+            title: "Practice Complete!",
+            message: "Great job! You've completed all steps in this lesson.",
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(UIAlertAction(title: "Continue Practicing", style: .default) { [weak self] _ in
+            self?.currentStepIndex = 0
+            self?.updateContent()
+            self?.updateProgress()
+        })
+        
+        alert.addAction(UIAlertAction(title: "Return to Library", style: .default) { [weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
+        })
+        
+        present(alert, animated: true)
     }
 }

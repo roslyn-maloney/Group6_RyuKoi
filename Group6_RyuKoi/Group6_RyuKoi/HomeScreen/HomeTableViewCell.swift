@@ -1,6 +1,6 @@
 //
 //  HomeTableViewCell.swift
-//  RyūKoi
+//  RyūKoi
 //
 //  Created by Allison Lee on 11/13/25.
 //
@@ -13,13 +13,19 @@ class HomeTableViewCell: UITableViewCell {
     
     var leftLabel: UILabel!
     var rightLabel: UILabel!
+    
+    // Callbacks for tap handling
+    var onLeftTap: (() -> Void)?
+    var onRightTap: (() -> Void)?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .clear
         contentView.backgroundColor = .clear
+        selectionStyle = .none 
 
         setupLessonViews()
+        setupTapGestures()
         initConstraints()
     }
 
@@ -29,6 +35,26 @@ class HomeTableViewCell: UITableViewCell {
 
         leftLabel = makeLabel(in: leftLessonView)
         rightLabel = makeLabel(in: rightLessonView)
+    }
+    
+    func setupTapGestures() {
+        // Add tap gesture to left lesson box
+        let leftTap = UITapGestureRecognizer(target: self, action: #selector(leftLessonTapped))
+        leftLessonView.addGestureRecognizer(leftTap)
+        leftLessonView.isUserInteractionEnabled = true
+        
+        // Add tap gesture to right lesson box
+        let rightTap = UITapGestureRecognizer(target: self, action: #selector(rightLessonTapped))
+        rightLessonView.addGestureRecognizer(rightTap)
+        rightLessonView.isUserInteractionEnabled = true
+    }
+    
+    @objc private func leftLessonTapped() {
+        onLeftTap?()
+    }
+    
+    @objc private func rightLessonTapped() {
+        onRightTap?()
     }
 
     func makeLessonBox() -> UIView {

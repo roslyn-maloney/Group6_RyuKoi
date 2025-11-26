@@ -58,12 +58,9 @@ class HomeViewController: UIViewController {
         
         homeScreen.updateCategory(receivedCategory)
         
-        // Remove separator line between cells
-        homeScreen.tableViewLessons.separatorStyle = .none
-        
-        // Patching the table view delegate and datasource to controller
-        homeScreen.tableViewLessons.delegate = self
-        homeScreen.tableViewLessons.dataSource = self
+        // Patching the collection view delegate and datasource to controller
+        homeScreen.collectionViewLessons.delegate = self
+        homeScreen.collectionViewLessons.dataSource = self
         
         // Setup navbar button targets
         homeScreen.setAccountTarget(self, action: #selector(openProfile))
@@ -98,47 +95,29 @@ class HomeViewController: UIViewController {
     }
 }
 
-extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
+extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // Each row displays 2 lessons, so divide by 2 and round up
-        return (lessons.count + 1) / 2
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return lessons.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "lessons", for: indexPath) as! HomeTableViewCell
-        
-        let leftIndex = indexPath.row * 2
-        let rightIndex = leftIndex + 1
-        
-        // Configure left lesson
-        if leftIndex < lessons.count {
-            let leftLesson = lessons[leftIndex]
-            cell.leftLabel.text = leftLesson.title
-            
-            // Setup left lesson tap
-            cell.onLeftTap = { [weak self] in
-                self?.navigateToLessonDetail(lesson: leftLesson, lessonIndex: leftIndex)
-            }
-        }
-        
-        // Configure right lesson
-        if rightIndex < lessons.count {
-            let rightLesson = lessons[rightIndex]
-            cell.rightLessonView.isHidden = false
-            cell.rightLabel.text = rightLesson.title
-            
-            // Setup right lesson tap
-            cell.onRightTap = { [weak self] in
-                self?.navigateToLessonDetail(lesson: rightLesson, lessonIndex: rightIndex)
-            }
-        } else {
-            cell.rightLessonView.isHidden = true
-            cell.onRightTap = nil
-        }
-        
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeLessonCell", for: indexPath) as! HomeLessonCell
+        let lesson = lessons[indexPath.item]
+        cell.configure(with: lesson)
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let lesson = lessons[indexPath.item]
+        navigateToLessonDetail(lesson: lesson, lessonIndex: indexPath.item)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = (collectionView.frame.width - 12) / 2 // 2 columns
+        return CGSize(width: width, height: width)
     }
     
     // MARK: - Navigation
@@ -149,3 +128,4 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         navigationController?.pushViewController(lessonDetailVC, animated: true)
     }
 }
+

@@ -9,6 +9,7 @@ import UIKit
 
 class ProfileView: UIView {
     var backBtn: UIButton!
+    var logout: UIButton!
     var image: UIImageView!
     var name: UILabel!
     var email: UILabel!
@@ -21,10 +22,11 @@ class ProfileView: UIView {
         super.init(frame: frame)
         backgroundColor = UIColor(red: 1.0, green: 0.953, blue: 0.851, alpha: 1.0)
         setupBackBtn()
+        setupLogoutBtn()
         setupImage()
         setupName()
         setupEmail()
-        setupPreferences()
+        //setupPreferences()
         setupEditBtn()
         setupsetupNotificationLabel()
         setupNotificationTableView()
@@ -37,6 +39,14 @@ class ProfileView: UIView {
         backBtn.tintColor = .label
         backBtn.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(backBtn)
+    }
+    
+    func setupLogoutBtn(){
+        logout = UIButton()
+        logout.setImage(UIImage(systemName: "iphone.and.arrow.right.outward"), for: .normal)
+        logout.tintColor = .label
+        logout.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(logout)
     }
     
     func setupImage(){
@@ -66,20 +76,20 @@ class ProfileView: UIView {
         self.addSubview(email)
     }
     
-    func setupPreferences() {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        layout.minimumLineSpacing = 8
-        layout.minimumInteritemSpacing = 8
-        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        
-        preferencesCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        preferencesCollectionView.backgroundColor = .clear
-        preferencesCollectionView.register(PreferenceTokenCellCollectionViewCell.self, forCellWithReuseIdentifier: "token")
-        preferencesCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.addSubview(preferencesCollectionView)
-    }
+    //    func setupPreferences() {
+    //        let layout = UICollectionViewFlowLayout()
+    //        layout.scrollDirection = .vertical
+    //        layout.minimumLineSpacing = 8
+    //        layout.minimumInteritemSpacing = 8
+    //        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+    //
+    //        preferencesCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+    //        preferencesCollectionView.backgroundColor = .clear
+    //        preferencesCollectionView.register(PreferenceTokenCellCollectionViewCell.self, forCellWithReuseIdentifier: "token")
+    //        preferencesCollectionView.translatesAutoresizingMaskIntoConstraints = false
+    //
+    //        self.addSubview(preferencesCollectionView)
+    //    }
     
     
     func setupEditBtn() {
@@ -110,8 +120,11 @@ class ProfileView: UIView {
     
     func initConstraints() {
         NSLayoutConstraint.activate([
-            backBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 10),
+            backBtn.topAnchor.constraint(equalTo: self.topAnchor, constant: 70),
             backBtn.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 10),
+            
+            logout.topAnchor.constraint(equalTo: self.topAnchor, constant: 70),
+            logout.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -10),
             
             image.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 20),
             image.centerXAnchor.constraint(equalTo: self.centerXAnchor),
@@ -124,12 +137,12 @@ class ProfileView: UIView {
             email.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 20),
             email.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             
-            preferencesCollectionView.topAnchor.constraint(equalTo: email.bottomAnchor, constant: 10),
-            preferencesCollectionView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8),
-            preferencesCollectionView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8),
-            preferencesCollectionView.heightAnchor.constraint(equalToConstant: 50),
+            //            preferencesCollectionView.topAnchor.constraint(equalTo: email.bottomAnchor, constant: 10),
+            //            preferencesCollectionView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8),
+            //            preferencesCollectionView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8),
+            //            preferencesCollectionView.heightAnchor.constraint(equalToConstant: 50),
             
-            editBtn.topAnchor.constraint(equalTo: preferencesCollectionView.bottomAnchor, constant: 10),
+            editBtn.topAnchor.constraint(equalTo: email.bottomAnchor, constant: 10),
             editBtn.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             editBtn.heightAnchor.constraint(equalToConstant: 44),
             editBtn.widthAnchor.constraint(equalToConstant: 150),

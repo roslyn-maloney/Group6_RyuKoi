@@ -1,6 +1,6 @@
 //
 //  HomeView.swift
-//  RyūKoi
+//  RyūKoi
 //
 //  Created by Allison Lee on 11/13/25.
 //
@@ -13,8 +13,8 @@ class HomeView: UIView {
     //MARK: scrollview for scrolling???
     var contentWrapper:UIScrollView!
     
-    //MARK: tableView for lessons...
-    var tableViewLessons: UITableView!
+    //MARK: collectionView for lessons...
+    var collectionViewLessons: UICollectionView!
     
     var categoryBackground: UIView! // to be under the category label?
     var categoryLabel: UILabel!
@@ -26,9 +26,9 @@ class HomeView: UIView {
         setupBackBtn()
         setupNavBar()
         setupContentWrapper()
-        setupTableViewCategories()
+        setupCollectionView()
         setupRect()
-        categoryLabel = setupLabel("", 30) 
+        categoryLabel = setupLabel("", 30)
         subLabel = setupLabel("Lesson journey", 16)
         
         initConstraints()
@@ -55,13 +55,17 @@ class HomeView: UIView {
         self.addSubview(contentWrapper)
     }
     
-    func setupTableViewCategories(){
-        tableViewLessons = UITableView()
-        tableViewLessons.register(HomeTableViewCell.self, forCellReuseIdentifier: "lessons")
-        tableViewLessons.translatesAutoresizingMaskIntoConstraints = false
-        tableViewLessons.backgroundColor = .clear
+    func setupCollectionView(){
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.minimumInteritemSpacing = 12
+        layout.minimumLineSpacing = 12
         
-        self.addSubview(tableViewLessons)
+        collectionViewLessons = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionViewLessons.translatesAutoresizingMaskIntoConstraints = false
+        collectionViewLessons.backgroundColor = .clear
+        collectionViewLessons.register(HomeLessonCell.self, forCellWithReuseIdentifier: "HomeLessonCell")
+        self.addSubview(collectionViewLessons)
     }
     
     func setupRect() {
@@ -92,7 +96,7 @@ class HomeView: UIView {
              contentWrapper.widthAnchor.constraint(equalTo:self.safeAreaLayoutGuide.widthAnchor),
              contentWrapper.heightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.heightAnchor),*/
             
-            backBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 20),
+            backBtn.topAnchor.constraint(equalTo: self.topAnchor, constant: 80),
             backBtn.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 10),
             
             //navBar.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor ,constant: 20),
@@ -102,10 +106,11 @@ class HomeView: UIView {
             navBar.heightAnchor.constraint(equalToConstant: 60),
             
             // MARK: category background ...
-            categoryBackground.topAnchor.constraint(equalTo: navBar.bottomAnchor),
+            categoryBackground.topAnchor.constraint(equalTo: navBar.bottomAnchor, constant: 10),
             categoryBackground.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             categoryBackground.heightAnchor.constraint(equalToConstant: 60),
-            categoryBackground.widthAnchor.constraint(equalToConstant: 220),
+            categoryBackground.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            categoryBackground.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             
             // MARK: category label ...
             categoryLabel.centerXAnchor.constraint(equalTo: categoryBackground.centerXAnchor),
@@ -115,10 +120,10 @@ class HomeView: UIView {
             subLabel.topAnchor.constraint(equalTo: categoryBackground.bottomAnchor, constant: 8),
             subLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             
-            tableViewLessons.topAnchor.constraint(equalTo: subLabel.bottomAnchor, constant: 10),
-            tableViewLessons.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 8),
-            tableViewLessons.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -8),
-            tableViewLessons.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -8) // maybe!
+            collectionViewLessons.topAnchor.constraint(equalTo: subLabel.bottomAnchor, constant: 10),
+            collectionViewLessons.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8),
+            collectionViewLessons.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8),
+            collectionViewLessons.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -8)
         ])
     }
     

@@ -21,13 +21,11 @@ class CommunitiesViewController: UIViewController {
         super.viewDidLoad()
         navigationItem.hidesBackButton = true
         
-        // remove separator line between cells
-        communitiesScreen.tableViewEvents.separatorStyle = .none
-        
-        
         //MARK: patching the table view delegate and datasource to controller...
-        communitiesScreen.tableViewEvents.delegate = self
-        communitiesScreen.tableViewEvents.dataSource = self
+        communitiesScreen.collectionViewEvents.delegate = self
+        communitiesScreen.collectionViewEvents.dataSource = self
+        
+        communitiesScreen.setAccountTarget(self, action: #selector(openProfile))
     }
     
     @objc func openProfile() {
@@ -36,28 +34,29 @@ class CommunitiesViewController: UIViewController {
     }
 }
 
-extension CommunitiesViewController: UITableViewDelegate, UITableViewDataSource{
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+extension CommunitiesViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return events.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "events", for: indexPath) as! CommunitiesTableViewCell
-        
-        let leftIndex = indexPath.row * 2
-        let rightIndex = leftIndex + 1
-        
-        cell.leftLabel.text = events[leftIndex]
-        
-        if rightIndex < events.count {
-            cell.rightEventView.isHidden = false
-            cell.rightLabel.text = events[rightIndex]
-        } else {
-            // Hide right box if odd number of lessons
-            cell.rightEventView.isHidden = true
-        }
-        
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CommunitiesEventCell.identifier, for: indexPath) as! CommunitiesEventCell
+        cell.eventLabel.text = events[indexPath.item]
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("Selected Event: \(events[indexPath.item])")
+        let eventScreen = CommunityViewController()
+        navigationController?.pushViewController(eventScreen, animated: true)
+        // You can handle favorite toggles here or push to lesson detail
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = (collectionView.frame.width - 12) / 2 // 2 columns
+        return CGSize(width: width, height: width)
     }
 }

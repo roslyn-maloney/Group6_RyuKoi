@@ -67,7 +67,7 @@ class CategoriesView: UIView {
              contentWrapper.heightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.heightAnchor),
              */
             
-            navBar.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor ,constant: 20),
+            navBar.topAnchor.constraint(equalTo: self.topAnchor ,constant: 70),
             navBar.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             navBar.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             navBar.heightAnchor.constraint(equalToConstant: 60),
@@ -87,10 +87,6 @@ class CategoriesView: UIView {
     
     func setAccountTarget(_ target: Any?, action: Selector) {
         navBar.account.addTarget(target, action: action, for: .touchUpInside)
-    }
-    
-    func setLogoTarget(_ target: Any?, action: Selector) {
-        navBar.logo.addTarget(target, action: action, for: .touchUpInside)
     }
     
     //MARK: initializing constraints...

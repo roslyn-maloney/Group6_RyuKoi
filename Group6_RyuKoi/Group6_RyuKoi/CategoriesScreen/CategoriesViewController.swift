@@ -17,10 +17,10 @@ class CategoriesViewController: UIViewController {
     }
     
     // help with the navBar Layout
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: animated)
-    }
+    //    override func viewWillAppear(_ animated: Bool) {
+    //        super.viewWillAppear(animated)
+    //        navigationController?.setNavigationBarHidden(true, animated: animated)
+    //    }
     
     //    override func viewWillDisappear(_ animated: Bool) {
     //        super.viewWillDisappear(animated)
@@ -29,6 +29,7 @@ class CategoriesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.isHidden = true
         navigationItem.hidesBackButton = true
         navigationItem.largeTitleDisplayMode = .never
         
@@ -40,17 +41,11 @@ class CategoriesViewController: UIViewController {
         categoriesScreen.tableViewCategories.dataSource = self
         
         categoriesScreen.setAccountTarget(self, action: #selector(openProfile))
-        categoriesScreen.setLogoTarget(self, action: #selector(openHome))
     }
     
     @objc func openProfile() {
         let profileScreen = ProfileViewController()
         navigationController?.pushViewController(profileScreen, animated: true)
-    }
-    
-    @objc func openHome() {
-        let homeController = HomeViewController()
-        navigationController?.pushViewController(homeController, animated: true)
     }
 }
 

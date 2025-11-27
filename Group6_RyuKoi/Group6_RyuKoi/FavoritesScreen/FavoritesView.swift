@@ -328,9 +328,9 @@ class FavoriteCardCell: UICollectionViewCell {
     }
 }
 
-// MARK: - Model
 struct FavoriteLesson {
     let id: String
     let title: String
     let progressPercentage: Int // 0-100
+    let martialArt: MartialArt
 }

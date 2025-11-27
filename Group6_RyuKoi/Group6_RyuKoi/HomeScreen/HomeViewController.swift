@@ -105,6 +105,23 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeLessonCell", for: indexPath) as! HomeLessonCell
         let lesson = lessons[indexPath.item]
         cell.configure(with: lesson)
+        
+        // Handle heart tap
+        cell.onHeartTapped = { [weak self] in
+            guard let self = self else { return }
+            self.lessons[indexPath.item].isLiked.toggle()
+            print("Lesson '\(self.lessons[indexPath.item].title)' liked: \(self.lessons[indexPath.item].isLiked)")
+            // TODO: Save to favorites/liked list
+        }
+        
+        // Handle star tap
+        cell.onStarTapped = { [weak self] in
+            guard let self = self else { return }
+            self.lessons[indexPath.item].isFavorited.toggle()
+            print("Lesson '\(self.lessons[indexPath.item].title)' favorited: \(self.lessons[indexPath.item].isFavorited)")
+            // TODO: Save to favorites list
+        }
+        
         return cell
     }
     

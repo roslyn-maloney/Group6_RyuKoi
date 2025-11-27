@@ -22,6 +22,7 @@ class FavoritesViewController: UIViewController {
         super.viewDidLoad()
         setupCollectionView()
         loadFavorites()
+        navigationController?.setNavigationBarHidden(true, animated: false)
         
         favoritesView.setAccountTarget(self, action: #selector(openProfile))
     }
@@ -57,13 +58,27 @@ class FavoritesViewController: UIViewController {
     private func loadMockFavorites() -> [FavoriteLesson] {
         // Mock data for testing with varying progress levels
         return [
-            FavoriteLesson(id: "1", title: "Basic Punching Technique", progressPercentage: 100),
-            FavoriteLesson(id: "2", title: "Roundhouse Kick", progressPercentage: 75),
-            FavoriteLesson(id: "3", title: "Guard Passing", progressPercentage: 45),
-            FavoriteLesson(id: "4", title: "Front Kick Form", progressPercentage: 100),
-            FavoriteLesson(id: "5", title: "Defensive Stance", progressPercentage: 60),
-            FavoriteLesson(id: "6", title: "Combination Drills", progressPercentage: 20)
+            FavoriteLesson(id: "1", title: "Basic Punching Technique", progressPercentage: 100, martialArt: .boxing),
+            FavoriteLesson(id: "2", title: "Roundhouse Kick", progressPercentage: 75, martialArt: .taekwondo),
+            FavoriteLesson(id: "3", title: "Guard Passing", progressPercentage: 45, martialArt: .bjj),
+            FavoriteLesson(id: "4", title: "Front Kick Form", progressPercentage: 100, martialArt: .karate),
+            FavoriteLesson(id: "5", title: "Defensive Stance", progressPercentage: 60, martialArt: .boxing),
+            FavoriteLesson(id: "6", title: "Combination Drills", progressPercentage: 20, martialArt: .mma)
         ]
+    }
+    
+    // MARK: - Helper Methods
+    private func progressStateFromPercentage(_ percentage: Int) -> LessonProgressState {
+        switch percentage {
+        case 0:
+            return .notStarted
+        case 1..<100:
+            return .inProgress
+        case 100:
+            return .completed
+        default:
+            return .notStarted
+        }
     }
 }
 
@@ -90,11 +105,21 @@ extension FavoritesViewController: UICollectionViewDataSource {
 extension FavoritesViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let selectedLesson = favoritesList[indexPath.row]
-        print("Selected favorite lesson: \(selectedLesson.title)")
+        let selectedFavorite = favoritesList[indexPath.row]
         
-        // TODO: Navigate to lesson detail screen
-        // Example: navigationController?.pushViewController(LessonDetailViewController(lesson: selectedLesson), animated: true)
+        // Convert FavoriteLesson to Lesson for practice screen
+        let lesson = Lesson(
+            title: selectedFavorite.title,
+            progressState: progressStateFromPercentage(selectedFavorite.progressPercentage),
+            martialArt: selectedFavorite.martialArt,
+            isLiked: true,
+            isFavorited: true
+        )
+        
+        // Navigate directly to practice screen
+        let practiceVC = PracticeViewController()
+        practiceVC.selectedLesson = lesson
+        navigationController?.pushViewController(practiceVC, animated: true)
     }
 }
 

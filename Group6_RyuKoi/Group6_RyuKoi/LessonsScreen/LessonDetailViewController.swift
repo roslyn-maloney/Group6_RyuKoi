@@ -22,10 +22,6 @@ class LessonDetailViewController: TopNavigationViewController {
         // Hide default navigation bar
         navigationController?.setNavigationBarHidden(true, animated: false)
         
-        print("✅ LessonDetailViewController loaded")
-        print("Lesson number: \(lessonNumber)")
-        print("Lesson: \(lesson?.title ?? "nil")")
-        
         setupViews()
         setupConstraints()
         configureView()

@@ -53,6 +53,8 @@ struct Lesson {
     let title: String
     let progressState: LessonProgressState
     let martialArt: MartialArt
+    var isLiked: Bool = false
+    var isFavorited: Bool = false
 }
 
 class LessonViewController: TopNavigationViewController {

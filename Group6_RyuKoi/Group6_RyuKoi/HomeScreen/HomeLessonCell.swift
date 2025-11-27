@@ -1,6 +1,6 @@
 //
-//  HomeTableViewCell.swift
-//  RyūKoi
+//  HomeLessonCell.swift
+//  RyūKoi
 //
 //  Created by Allison Lee on 11/13/25.
 //
@@ -32,6 +32,28 @@ class HomeLessonCell: UICollectionViewCell {
         return label
     }()
     
+    let heartButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "heart"), for: .normal)
+        button.setImage(UIImage(systemName: "heart.fill"), for: .selected)
+        button.tintColor = .systemRed
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    let starButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "star"), for: .normal)
+        button.setImage(UIImage(systemName: "star.fill"), for: .selected)
+        button.tintColor = UIColor(red: 0.72, green: 0.21, blue: 0.055, alpha: 1.0)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    // Closures for button actions
+    var onHeartTapped: (() -> Void)?
+    var onStarTapped: (() -> Void)?
+    
     override var isSelected: Bool {
         didSet {
             // Highlight when selected
@@ -45,6 +67,12 @@ class HomeLessonCell: UICollectionViewCell {
         super.init(frame: frame)
         contentView.addSubview(lessonView)
         lessonView.addSubview(lessonLabel)
+        lessonView.addSubview(heartButton)
+        lessonView.addSubview(starButton)
+        
+        heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
+        starButton.addTarget(self, action: #selector(starButtonTapped), for: .touchUpInside)
+        
         setupConstraints()
     }
     
@@ -55,11 +83,42 @@ class HomeLessonCell: UICollectionViewCell {
             lessonView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             lessonView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
+            // Star button - top right
+            starButton.topAnchor.constraint(equalTo: lessonView.topAnchor, constant: 8),
+            starButton.trailingAnchor.constraint(equalTo: lessonView.trailingAnchor, constant: -8),
+            starButton.widthAnchor.constraint(equalToConstant: 30),
+            starButton.heightAnchor.constraint(equalToConstant: 30),
+            
+            // Heart button - top left
+            heartButton.topAnchor.constraint(equalTo: lessonView.topAnchor, constant: 8),
+            heartButton.leadingAnchor.constraint(equalTo: lessonView.leadingAnchor, constant: 8),
+            heartButton.widthAnchor.constraint(equalToConstant: 30),
+            heartButton.heightAnchor.constraint(equalToConstant: 30),
+            
+            // Lesson label - centered
             lessonLabel.centerXAnchor.constraint(equalTo: lessonView.centerXAnchor),
             lessonLabel.centerYAnchor.constraint(equalTo: lessonView.centerYAnchor),
             lessonLabel.leadingAnchor.constraint(greaterThanOrEqualTo: lessonView.leadingAnchor, constant: 8),
             lessonLabel.trailingAnchor.constraint(lessThanOrEqualTo: lessonView.trailingAnchor, constant: -8)
         ])
+    }
+    
+    @objc private func heartButtonTapped() {
+        heartButton.isSelected.toggle()
+        onHeartTapped?()
+    }
+    
+    @objc private func starButtonTapped() {
+        starButton.isSelected.toggle()
+        onStarTapped?()
+    }
+    
+    func configure(with lesson: Lesson) {
+        lessonLabel.text = lesson.title
+        
+        // Set button states based on lesson
+        heartButton.isSelected = lesson.isLiked
+        starButton.isSelected = lesson.isFavorited
     }
     
     required init?(coder: NSCoder) {

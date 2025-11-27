@@ -42,4 +42,18 @@ enum MartialArt {
             return UIColor(red: 0.8, green: 0.2, blue: 0.4, alpha: 1.0) // Pink/Red
         }
     }
+    
+    var description: String {
+        switch self {
+        case .taekwondo: return "Taekwondo"
+        case .karate: return "Karate"
+        case .boxing: return "Boxing"
+        case .mma: return "MMA"
+        case .wrestling: return "Wrestling"
+        case .judo: return "Judo"
+        case .bjj: return "Brazilian Jiu-Jitsu"
+        case .kickboxing: return "Kickboxing"
+        case .muayThai: return "Muay Thai"
+        }
+    }
 }

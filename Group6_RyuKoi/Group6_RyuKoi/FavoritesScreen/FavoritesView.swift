@@ -142,7 +142,7 @@ class FavoritesView: UIView {
             emptyStateSubtitleLabel.topAnchor.constraint(equalTo: emptyStateLabel.bottomAnchor, constant: 8),
             emptyStateSubtitleLabel.leadingAnchor.constraint(equalTo: emptyStateView.leadingAnchor),
             emptyStateSubtitleLabel.trailingAnchor.constraint(equalTo: emptyStateView.trailingAnchor),
-            emptyStateSubtitleLabel.bottomAnchor.constraint(equalTo: emptyStateView.bottomAnchor)
+            emptyStateSubtitleLabel.bottomAnchor.constraint(equalTo: emptyStateView.bottomAncor)
         ])
     }
     
@@ -215,6 +215,7 @@ class FavoriteCardCell: UICollectionViewCell {
     }()
     
     private var progressBarFillWidthConstraint: NSLayoutConstraint?
+    private var currentLesson: FavoriteLesson?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -267,39 +268,6 @@ class FavoriteCardCell: UICollectionViewCell {
         ])
     }
     
-    func configure(with lesson: FavoriteLesson) {
-        titleLabel.text = lesson.title
-        progressLabel.text = "\(lesson.progressPercentage)% Complete"
-        
-        // Animate progress bar fill
-        let targetWidth = progressBarBackground.bounds.width * (CGFloat(lesson.progressPercentage) / 100.0)
-        progressBarFillWidthConstraint?.constant = targetWidth
-        
-        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut) {
-            self.layoutIfNeeded()
-        }
-        
-        // Change progress bar color based on completion
-        if lesson.progressPercentage == 100 {
-            progressBarFill.backgroundColor = .systemGreen
-        } else if lesson.progressPercentage >= 50 {
-            progressBarFill.backgroundColor = .systemBlue
-        } else {
-            progressBarFill.backgroundColor = .systemOrange
-        }
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        // Update progress bar width when layout changes
-        if let lesson = currentLesson {
-            let targetWidth = progressBarBackground.bounds.width * (CGFloat(lesson.progressPercentage) / 100.0)
-            progressBarFillWidthConstraint?.constant = targetWidth
-        }
-    }
-    
-    private var currentLesson: FavoriteLesson?
-    
     func configure(with lesson: FavoriteLesson, animated: Bool = true) {
         currentLesson = lesson
         titleLabel.text = lesson.title
@@ -326,8 +294,18 @@ class FavoriteCardCell: UICollectionViewCell {
             progressBarFill.backgroundColor = .systemOrange
         }
     }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        // Update progress bar width when layout changes
+        if let lesson = currentLesson {
+            let targetWidth = progressBarBackground.bounds.width * (CGFloat(lesson.progressPercentage) / 100.0)
+            progressBarFillWidthConstraint?.constant = targetWidth
+        }
+    }
 }
 
+// MARK: - Model
 struct FavoriteLesson {
     let id: String
     let title: String

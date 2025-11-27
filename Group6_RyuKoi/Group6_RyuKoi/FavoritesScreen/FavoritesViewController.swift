@@ -29,6 +29,7 @@ class FavoritesViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
         // Reload favorites when screen appears in case they changed
         loadFavorites()
     }
@@ -95,14 +96,14 @@ extension FavoritesViewController: UICollectionViewDataSource {
         }
         
         let lesson = favoritesList[indexPath.row]
-        cell.configure(with: lesson, animated: true)
+        cell.configure(with: lesson)
         
         return cell
     }
 }
 
 // MARK: - UICollectionViewDelegate
-extension FavoritesViewController: UICollectionViewDelegate {
+extension FavoritesViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedFavorite = favoritesList[indexPath.row]
@@ -111,9 +112,9 @@ extension FavoritesViewController: UICollectionViewDelegate {
         let lesson = Lesson(
             title: selectedFavorite.title,
             progressState: progressStateFromPercentage(selectedFavorite.progressPercentage),
+            progressPercentage: selectedFavorite.progressPercentage,
             martialArt: selectedFavorite.martialArt,
-            isLiked: true,
-            isFavorited: true
+            favorite: true
         )
         
         // Navigate directly to practice screen
@@ -121,16 +122,12 @@ extension FavoritesViewController: UICollectionViewDelegate {
         practiceVC.selectedLesson = lesson
         navigationController?.pushViewController(practiceVC, animated: true)
     }
-}
-
-// MARK: - UICollectionViewDelegateFlowLayout
-extension FavoritesViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let padding: CGFloat = 16
         let availableWidth = collectionView.bounds.width - (padding * 3) // Left, right, and middle padding
         let cellWidth = availableWidth / 2
-        let cellHeight: CGFloat = 200 // Taller to accommodate progress bar
+        let cellHeight = cellWidth
         
         return CGSize(width: cellWidth, height: cellHeight)
     }

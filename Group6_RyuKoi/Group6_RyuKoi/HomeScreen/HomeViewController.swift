@@ -5,7 +5,8 @@
 //  Created by Allison Lee on 11/13/25.
 //
 //MARK: TODO
-// need to add ability to "heart" a lesson to add to favorites // changed some stuff with bottom nav bar??? dunno how it works.
+// need to add ability to "heart" a lesson to add to favorites
+// need to change table view to grid view for lessons/favorites/communities
 
 import UIKit
 
@@ -85,43 +86,31 @@ class HomeViewController: UIViewController {
     private func generateLessons() {
         // Generate 6 lessons with varying progress states
         lessons = [
-            Lesson(title: "Lesson 1", progressState: .notStarted, martialArt: martialArtType),
-            Lesson(title: "Lesson 2", progressState: .notStarted, martialArt: martialArtType),
-            Lesson(title: "Lesson 3", progressState: .notStarted, martialArt: martialArtType),
-            Lesson(title: "Lesson 4", progressState: .notStarted, martialArt: martialArtType),
-            Lesson(title: "Lesson 5", progressState: .notStarted, martialArt: martialArtType),
-            Lesson(title: "Lesson 6", progressState: .notStarted, martialArt: martialArtType)
+            Lesson(title: "Lesson 1", progressState: .notStarted, progressPercentage: 0, martialArt: martialArtType, favorite: false),
+            Lesson(title: "Lesson 2", progressState: .notStarted, progressPercentage: 0, martialArt: martialArtType, favorite: false),
+            Lesson(title: "Lesson 3", progressState: .notStarted, progressPercentage: 0, martialArt: martialArtType, favorite: false),
+            Lesson(title: "Lesson 4", progressState: .notStarted, progressPercentage: 0, martialArt: martialArtType, favorite: false),
+            Lesson(title: "Lesson 5", progressState: .notStarted, progressPercentage: 0, martialArt: martialArtType, favorite: false),
+            Lesson(title: "Lesson 6", progressState: .notStarted, progressPercentage: 0, martialArt: martialArtType, favorite: false)
         ]
     }
 }
 
 extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView,
+                        numberOfItemsInSection section: Int) -> Int {
         return lessons.count
     }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeLessonCell", for: indexPath) as! HomeLessonCell
-        let lesson = lessons[indexPath.item]
-        cell.configure(with: lesson)
-        
-        // Handle heart tap
-        cell.onHeartTapped = { [weak self] in
-            guard let self = self else { return }
-            self.lessons[indexPath.item].isLiked.toggle()
-            print("Lesson '\(self.lessons[indexPath.item].title)' liked: \(self.lessons[indexPath.item].isLiked)")
-            // TODO: Save to favorites/liked list
-        }
-        
-        // Handle star tap
-        cell.onStarTapped = { [weak self] in
-            guard let self = self else { return }
-            self.lessons[indexPath.item].isFavorited.toggle()
-            print("Lesson '\(self.lessons[indexPath.item].title)' favorited: \(self.lessons[indexPath.item].isFavorited)")
-            // TODO: Save to favorites list
-        }
-        
+
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: "HomeLessonCell",
+            for: indexPath
+        ) as! HomeLessonCell
+
+        cell.configure(with: lessons[indexPath.item])
         return cell
     }
     
@@ -129,12 +118,16 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         let lesson = lessons[indexPath.item]
         navigateToLessonDetail(lesson: lesson, lessonIndex: indexPath.item)
     }
-    
+
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = (collectionView.frame.width - 12) / 2 // 2 columns
-        return CGSize(width: width, height: width)
+
+        let spacing: CGFloat = 12
+        let totalSpacing = spacing * 3
+        let width = (collectionView.bounds.width - totalSpacing) / 2
+
+        return CGSize(width: width, height: 150)
     }
     
     // MARK: - Navigation
@@ -145,4 +138,3 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         navigationController?.pushViewController(lessonDetailVC, animated: true)
     }
 }
-
